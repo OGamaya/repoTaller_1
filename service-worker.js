@@ -1,268 +1,66 @@
-/**
- * Copyright 2016 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+var cacheName = 'shellTaller1';
+var dataCacheName = 'dataTaller1';
+var filesToCache = [ '/',
+  '/index.html',
+  '/scripts/app.js',
+  '/styles/inline.css',
+  '/images/ic_add_white_24px.svg',
+  '/images/ic_refresh_white_24px.svg'
+];
 
-// DO NOT EDIT THIS GENERATED OUTPUT DIRECTLY!
-// This file should be overwritten as part of your build process.
-// If you need to extend the behavior of the generated service worker, the best approach is to write
-// additional code and include it using the importScripts option:
-//   https://github.com/GoogleChrome/sw-precache#importscripts-arraystring
-//
-// Alternatively, it's possible to make changes to the underlying template file and then use that as the
-// new base for generating output, via the templateFilePath option:
-//   https://github.com/GoogleChrome/sw-precache#templatefilepath-string
-//
-// If you go that route, make sure that whenever you update your sw-precache dependency, you reconcile any
-// changes made to this original template file with your modified copy.
-
-// This generated service worker JavaScript will precache your site's resources.
-// The code needs to be saved in a .js file at the top-level of your site, and registered
-// from your pages in order to be used. See
-// https://github.com/googlechrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js
-// for an example of how you can register this script and handle various service worker events.
-
-/* eslint-env worker, serviceworker */
-/* eslint-disable indent, no-unused-vars, no-multiple-empty-lines, max-nested-callbacks, space-before-function-paren, quotes, comma-spacing */
-'use strict';
-
-var precacheConfig = [["images/ic_add_white_24px.svg","b09442e8f4b45894cf21566f0813453c"],["images/ic_refresh_white_24px.svg","21e4c77a8b98c7516d6c7a97cdbddc22"],["images/icon-128.png","f8ddbfe5b3dc389c3eb80890ee5f90db"],["images/icon-144.png","fe3d01c22b118c4096f0c069e514f594"],["images/icon-152.png","75809f8acc154c451d5d3c41f5b1add1"],["images/icon-192.png","fd723a5304d7fc302da7f337386ec439"],["images/icon-256.png","d15c3d863e6e62f717472be16923df33"],["index.html","b0c4090e476cddedbd2383affcee3404"],["manifes.json","9c3f16cb4bcfc14da193c31de0cad289"],["node_modules/ansi-align/CHANGELOG.md","b865a5c97d471d7dda30eb82183a49eb"],["node_modules/ansi-align/README.md","04600bbc663c6268e48296f631b37009"],["node_modules/ansi-align/index.js","9d8d67a21a71064383a9f031707a076c"],["node_modules/ansi-align/package.json","1b325da3eef187cf23110056a8cef48d"],["node_modules/ansi-regex/index.js","fcdeb336b5df6b0b3ab790fbcfd4407a"],["node_modules/ansi-regex/package.json","390422684c1b30f94eddb89a1b283f09"],["node_modules/ansi-regex/readme.md","91bc94e0c79a04280efa0fdd63f396d2"],["node_modules/ansi-styles/index.js","b55216015700e72a8a7b09ed4e4fb384"],["node_modules/ansi-styles/package.json","f80cd8035163a6abc5c15f4b75cd8ef3"],["node_modules/ansi-styles/readme.md","6de199a2d543892f335c4d86830f2025"],["node_modules/array-find-index/index.js","a19a7b6671943fe3f99fecdb60ac106d"],["node_modules/array-find-index/package.json","aa9521f150145468c618c825b7b2bc0c"],["node_modules/array-find-index/readme.md","fb54891bdc5f1c6bd39789a218aadcfc"],["node_modules/balanced-match/LICENSE.md","7fa99ddc3424107350ca6e9a24552085"],["node_modules/balanced-match/README.md","2b81a22fa44f4237c9a42b1cbb260159"],["node_modules/balanced-match/index.js","ca7939972f730b534187f79544919e4e"],["node_modules/balanced-match/package.json","eb67f79e83cc9d42cc2aa78b6eb6f3b6"],["node_modules/boxen/index.js","22cdcd0ecd5d3f597b94f4c9670e8791"],["node_modules/boxen/node_modules/camelcase/index.js","e68852f4b0f58cdc886aa9d92bd7e171"],["node_modules/boxen/node_modules/camelcase/package.json","ae59f114cd5a630ced30cf1641335683"],["node_modules/boxen/node_modules/camelcase/readme.md","e5d1499ff6b8b385d8d5c11207fb90a0"],["node_modules/boxen/package.json","f77080adc7e8f87ffc967a55ed4a58c8"],["node_modules/boxen/readme.md","1baebef8ea6bd0bc920fd4c8f40fd91e"],["node_modules/brace-expansion/README.md","30f36d7d796aee78118b7336b71cef02"],["node_modules/brace-expansion/index.js","2e265baed5f4147160f144389684af9c"],["node_modules/brace-expansion/package.json","295020e0de2e379e4d7e3985aaa75372"],["node_modules/builtin-modules/builtin-modules.json","04f011c9b31017ab5fde0e39fe575364"],["node_modules/builtin-modules/index.js","fd9d9306e79e22e86c5a198c63eceab8"],["node_modules/builtin-modules/package.json","f5f065630e65cd0b0039e3210dfa0737"],["node_modules/builtin-modules/readme.md","982c991e830c4b263f77fb2c90503e07"],["node_modules/builtin-modules/static.js","ad704575c4e629f5cdb57f65de0686d6"],["node_modules/camelcase-keys/index.js","c558ce41088691f6c3a4f79625809061"],["node_modules/camelcase-keys/package.json","508bf4091dfe46fef015ad932276e940"],["node_modules/camelcase-keys/readme.md","47508c9695c6d00d7f9f4fcffa09366d"],["node_modules/camelcase/index.js","760ce1ead8f37c3ffc9f948288be5944"],["node_modules/camelcase/package.json","03660af78458f1bd03f7fdf831adcdb6"],["node_modules/camelcase/readme.md","720828d016c10e1a1eb88f2734a86bf8"],["node_modules/capture-stack-trace/index.js","5bd00d46fc732fbef2873d15a676fb92"],["node_modules/capture-stack-trace/package.json","37dde35b5471792d266b184144aa3cd4"],["node_modules/capture-stack-trace/readme.md","33851506affb96ec82f03b4dac886e10"],["node_modules/chalk/index.js","80c1d8db464506ce3e3088fb327ef22b"],["node_modules/chalk/package.json","a8e973016b84cc598e6baee4f0b08117"],["node_modules/chalk/readme.md","f00f933dbeb757ed7fd7f5127d64e083"],["node_modules/chalk/templates.js","4b69ee87432f991d3f1f1e90d5facd1e"],["node_modules/chalk/types/index.d.ts","608cb8aa723538a97479c8e6051c19fa"],["node_modules/cli-boxes/boxes.json","d32ddcfc743a4f96a3d29a13bfefb5dd"],["node_modules/cli-boxes/index.js","066d19e3172de9e194b90bce14a034dd"],["node_modules/cli-boxes/package.json","6c5434d87e98395e282f1a97f4c7ec07"],["node_modules/cli-boxes/readme.md","8309020cb3a3d7271b33987fd8d2a749"],["node_modules/color-convert/CHANGELOG.md","8bfdde6c27aefd62f810963029ec43ad"],["node_modules/color-convert/README.md","60a4a31985e24f1b41d77b595e9ae8c9"],["node_modules/color-convert/conversions.js","bc7d36768e1bcc20aeb5e2007a80ea96"],["node_modules/color-convert/index.js","3dd0a1f66c1d90dd2692e1bfa7eeb05a"],["node_modules/color-convert/package.json","02d35dadd8787c0b390c6bf62e0207b2"],["node_modules/color-convert/route.js","ec324515d5dff142da623cfca2c08c01"],["node_modules/color-name/README.md","8ec277916ba8eca636dad97c034af307"],["node_modules/color-name/index.js","405840ec3052209f357288fe4c0f4414"],["node_modules/color-name/package.json","418b41abae69fb610fd76b4621be7977"],["node_modules/color-name/test.js","4d018d689a1a257a1c4e09bb296dbb9e"],["node_modules/concat-map/README.markdown","3de808d1c878e1d12f12c8d849710db2"],["node_modules/concat-map/example/map.js","42b2341e75e2e29012793c31222c2783"],["node_modules/concat-map/index.js","8ef754ba23fdd37b3e8a1c52739ace80"],["node_modules/concat-map/package.json","f381f9622b718e901da9f55fd0189c86"],["node_modules/concat-map/test/map.js","a8e1d80e4629945216de220e4b580cf5"],["node_modules/configstore/index.js","4fa986e30a3a74f8bde6584359e6e0ad"],["node_modules/configstore/package.json","9f4a92ad24312738a124cd6068efc233"],["node_modules/configstore/readme.md","a07a2ddb3e319756ecd4cee37ea123bc"],["node_modules/create-error-class/index.js","01b3d186b7197f97f9730e505f27e7f1"],["node_modules/create-error-class/package.json","0f8b74641c25c92043efbc991189b084"],["node_modules/create-error-class/readme.md","7299393a48891c01dd5484e1de032674"],["node_modules/cross-spawn/CHANGELOG.md","bc27e857d6206a58abd356387469c080"],["node_modules/cross-spawn/README.md","b815d4e925af7a37543b70b488398a9f"],["node_modules/cross-spawn/index.js","862c4662263149ade884e65cdaa7640d"],["node_modules/cross-spawn/lib/enoent.js","ddfebbd9b053338f918133a5cc8ccd9b"],["node_modules/cross-spawn/lib/parse.js","51bcbd433ef00fe51233186f34af21c2"],["node_modules/cross-spawn/lib/util/escapeArgument.js","24716d66f62383f8b9b23f05f551f393"],["node_modules/cross-spawn/lib/util/escapeCommand.js","cf649e90aa13566a5cb0710a36ced576"],["node_modules/cross-spawn/lib/util/hasEmptyArgumentBug.js","ca48ad8b6e95aa58d09529e350c5f601"],["node_modules/cross-spawn/lib/util/readShebang.js","5bbb63e606aef58d17ea4a069b2f8655"],["node_modules/cross-spawn/lib/util/resolveCommand.js","3775aefe705eae2d9590e9c5ad1cede0"],["node_modules/cross-spawn/package.json","364197f6c0b81ba13a89dfc008705319"],["node_modules/crypto-random-string/index.js","6450648a342648077a779431b44331cd"],["node_modules/crypto-random-string/package.json","c1e1e5e49ab0a783f2dcfcfa8a78ed0b"],["node_modules/crypto-random-string/readme.md","a8afea8f4e3ff2183d9047a99508cf53"],["node_modules/currently-unhandled/browser.js","f85cd6f6159c1a744096dd98d0a8692c"],["node_modules/currently-unhandled/core.js","2e6014188dde097d5dc79ece92235eda"],["node_modules/currently-unhandled/index.js","2f869c32daa8065f4ebe6f9c2cf69f87"],["node_modules/currently-unhandled/package.json","4f59271d4bef8919862829b15544b688"],["node_modules/currently-unhandled/readme.md","20db8e3cc5aaf49c3ee1892b3137950b"],["node_modules/decamelize/index.js","983084e6146528df1707b0aa3ff6cd9a"],["node_modules/decamelize/package.json","3bd39f2e0ac899794d9ed89fbd9083e8"],["node_modules/decamelize/readme.md","71b1684a019e2f3d5cc76429939db237"],["node_modules/deep-extend/CHANGELOG.md","7b5e62e1513fcbab4f00c780290af9c3"],["node_modules/deep-extend/README.md","3b95c987a9faf9d7d8e0f699b2f9ef2e"],["node_modules/deep-extend/index.js","5df64d39a44871d832aa71f608878417"],["node_modules/deep-extend/lib/deep-extend.js","fdd5ab13e17f29b34e066194f83f9321"],["node_modules/deep-extend/package.json","437c4d628b1b2b99391ba77eb1b1389e"],["node_modules/dom-urls/README.md","f9bf68aac4f4920939e16768f6cfa11c"],["node_modules/dom-urls/index.js","43629b92a6fe6b72e85a1e4c3ca5391e"],["node_modules/dom-urls/package.json","56655635c5fa66b8d5beea7fd9107b7c"],["node_modules/dot-prop/index.js","9fa39a173d483249633a07ba10ade3f6"],["node_modules/dot-prop/package.json","182929b8862ebf7bc8280df6661f5d16"],["node_modules/dot-prop/readme.md","50b9451071354cbd5b7f3b0d4397ce23"],["node_modules/duplexer3/LICENSE.md","2ac3dfdce5a77f9cff9b5f70d216d17d"],["node_modules/duplexer3/README.md","49c330c22af91203f43d00b9e2431cd8"],["node_modules/duplexer3/index.js","c4b02835550dc48c5d70a7f6d8da3d50"],["node_modules/duplexer3/package.json","28f4c7b9fc3411e0c92718b79e653acd"],["node_modules/error-ex/README.md","fb8ffd816db556d2ea5ee059ba89b298"],["node_modules/error-ex/index.js","39336b80f07e788a2cb2516244f334a5"],["node_modules/error-ex/package.json","dd28afd0d0dc372b92a9cf3236088a30"],["node_modules/es6-promise/CHANGELOG.md","40284ee97e67aa57e3a66fb0c21f7bea"],["node_modules/es6-promise/README.md","fda58f5d835c0c7aba1fd325e6a70b07"],["node_modules/es6-promise/auto.js","b516758151252729f6a24303df6c1a77"],["node_modules/es6-promise/dist/es6-promise.auto.js","5607c355d11462578743e9d477782ac5"],["node_modules/es6-promise/dist/es6-promise.auto.map","1a93b6467ee824be8bace7030750bc14"],["node_modules/es6-promise/dist/es6-promise.auto.min.js","d80e6be80d1a07efed8e2161588baab7"],["node_modules/es6-promise/dist/es6-promise.auto.min.map","7ef44960fcf2aa50e429bc38e8bf1a38"],["node_modules/es6-promise/dist/es6-promise.js","aaec8eb80cb902a64a97e7b64ddd5b23"],["node_modules/es6-promise/dist/es6-promise.map","62ad9bc79db932757a277c29b54c8c83"],["node_modules/es6-promise/dist/es6-promise.min.js","7495eb3adc21bc8908b1e46fe9a8c96a"],["node_modules/es6-promise/dist/es6-promise.min.map","3845f26b8ba7b440873bfda43794aaa8"],["node_modules/es6-promise/es6-promise.d.ts","cc0c1f4cb2976dc8042869073e6e4882"],["node_modules/es6-promise/lib/es6-promise.auto.js","b66fba58cb90b3260b0b6159d8611457"],["node_modules/es6-promise/lib/es6-promise.js","9feb6700624e50ecbddb13d1e502a0b1"],["node_modules/es6-promise/lib/es6-promise/-internal.js","6fde196e58dd20283dadda5091e880e0"],["node_modules/es6-promise/lib/es6-promise/asap.js","5a036ec15c1e4aec7379ba3ec5549f61"],["node_modules/es6-promise/lib/es6-promise/enumerator.js","b0e841d29785a7b2d5209a93288f0c8b"],["node_modules/es6-promise/lib/es6-promise/polyfill.js","40beef37eac0eb04b2b948d36245065f"],["node_modules/es6-promise/lib/es6-promise/promise.js","3dcd09ebb6499fb1a9cb2cc940ba0f0f"],["node_modules/es6-promise/lib/es6-promise/promise/all.js","3b322588b808ef29090698e5d47d7d05"],["node_modules/es6-promise/lib/es6-promise/promise/race.js","f3134eff4fad30ef5396989302920704"],["node_modules/es6-promise/lib/es6-promise/promise/reject.js","4926bda3b87c32f9608a3c145ff636d2"],["node_modules/es6-promise/lib/es6-promise/promise/resolve.js","bcdb088cd3b029540ae383e793fe4934"],["node_modules/es6-promise/lib/es6-promise/then.js","6bce50765808193773ab54791f030b45"],["node_modules/es6-promise/lib/es6-promise/utils.js","84a5510bbc30f7029c3dde0df162c197"],["node_modules/es6-promise/package.json","e76b3bf2644e26eecb924e7b658ddce0"],["node_modules/escape-string-regexp/index.js","7b366c6d23641eabb9d8f46fa9008535"],["node_modules/escape-string-regexp/package.json","dd6872abce82f888a9fd3a2b6f051279"],["node_modules/escape-string-regexp/readme.md","16e18082bcf52d79e8ef430b7f8cc150"],["node_modules/execa/index.js","1f3e4a1e6d2ecf6af197984b9c1c4b23"],["node_modules/execa/lib/errname.js","2df305dc66502aa6016e0bc03d1e7ce8"],["node_modules/execa/lib/stdio.js","760972df95d68978ebb0a4cf36afb64f"],["node_modules/execa/package.json","056e150f6be365416f5cb2606652d062"],["node_modules/execa/readme.md","8b2a297add6bc397555fb762c0d9fa52"],["node_modules/find-up/index.js","273b843d5994136674f491d7a2c5ecfe"],["node_modules/find-up/package.json","d52ef5b263b9ccc96b2e1cfe83d8ce95"],["node_modules/find-up/readme.md","74183eb5676ad6df10dd4c5597ccdf14"],["node_modules/fs.realpath/README.md","b0e79f63ca0f7b8904b2b0e01b8aa1ed"],["node_modules/fs.realpath/index.js","81443ae283d9031000862ce501c9f964"],["node_modules/fs.realpath/old.js","8c3d2bd3edf5d8918b7cbf3c93b3ba32"],["node_modules/fs.realpath/package.json","077f19cf44e58e4875a65ed98c89ffb4"],["node_modules/get-stdin/index.js","c82d99b0454e15c5319dc5b1e37527e3"],["node_modules/get-stdin/package.json","ab7ebab596e1a25f8394984fa4d4d740"],["node_modules/get-stdin/readme.md","66e9c35acf0e22691b69f94f59f99edb"],["node_modules/get-stream/buffer-stream.js","8dd75e5047274804a38d499ee1f14caa"],["node_modules/get-stream/index.js","0a140fe572211ce5bbb465c28fec0aaa"],["node_modules/get-stream/package.json","aef5aff688161fb0aa07a308c93727e5"],["node_modules/get-stream/readme.md","37034bc591e05a502632e4ec3ceae19f"],["node_modules/glob/README.md","ebb6bd70ed9742c82792656adb349111"],["node_modules/glob/changelog.md","00f1acff927a7059ab085d87c72bbf43"],["node_modules/glob/common.js","0041795c4700b9e1c1cd76729517f08b"],["node_modules/glob/glob.js","20c4c7d5e53fcaaf2781e53942dc2e32"],["node_modules/glob/package.json","28fa4ac063bf780cbcec66229b5aba9e"],["node_modules/glob/sync.js","c29ff74e143a933770c75a66998fbeeb"],["node_modules/global-dirs/index.js","1932f88ca8085e2a0be97b923c25f3b2"],["node_modules/global-dirs/package.json","9d7a40790ee9c23a8ee19517af1ac1fa"],["node_modules/global-dirs/readme.md","5f4634ea2908de0ea704efb53356e739"],["node_modules/got/index.js","81e481447fd6ea40c5164f52e9d9e713"],["node_modules/got/package.json","30aa37bf923d2270069c18f4afd1d07c"],["node_modules/got/readme.md","1e79a2ef6ec7824e787665ff60c6175b"],["node_modules/graceful-fs/README.md","5ef783d2adc5dc85a9e3934ec8c59d5c"],["node_modules/graceful-fs/fs.js","7fb9340b36e141a4944b13d205af3d1d"],["node_modules/graceful-fs/graceful-fs.js","0af3af2b5945a7073883fb5273f25893"],["node_modules/graceful-fs/legacy-streams.js","620fc152dc9bfa087f9901703b1e2616"],["node_modules/graceful-fs/package.json","bfaa2cf69e9aaeac2774d3c050bd0349"],["node_modules/graceful-fs/polyfills.js","af45c9957edb1ef798122235655af168"],["node_modules/has-flag/index.js","84a33991244ece2b3f29f0fabbcbb25d"],["node_modules/has-flag/package.json","8fb500dc49affd607cdec7ea20e3293d"],["node_modules/has-flag/readme.md","9bc7a724860fcbc629f19bf0109cfba8"],["node_modules/hosted-git-info/README.md","148506936d25ed045dbf4390ab8d6042"],["node_modules/hosted-git-info/git-host-info.js","1cb7a4b3b9f85c3a1abc654c8e863646"],["node_modules/hosted-git-info/git-host.js","ffa643bf87d05fba1039e654345cf8ce"],["node_modules/hosted-git-info/index.js","41a26e11fa9515c32af6cfa40fbf5605"],["node_modules/hosted-git-info/package.json","b7551a1ae3fb0fde64c2a79fcff30272"],["node_modules/import-lazy/index.js","56c892b5aaf06cfd051949517e8d7c19"],["node_modules/import-lazy/package.json","6cc3ee7a545bbd01b244b41404457175"],["node_modules/import-lazy/readme.md","8616ac526a86c28736b3bb6287db1d35"],["node_modules/imurmurhash/README.md","c1fd47197ecab8a0852a47c5876c059e"],["node_modules/imurmurhash/imurmurhash.js","929efbc5c5675bc0e4d2b544fec5d84c"],["node_modules/imurmurhash/imurmurhash.min.js","52d2eb410de1c9e0758ef562289289fa"],["node_modules/imurmurhash/package.json","7aae1b0553c58346bb22b1b969bcb27f"],["node_modules/indent-string/index.js","b3a3b06e58214f950cb0d0fe34533da8"],["node_modules/indent-string/package.json","3b591f07f0e0c0316c71468e72d3ced1"],["node_modules/indent-string/readme.md","cc2ed38405f80830212136a10f78375c"],["node_modules/inflight/README.md","0a30dbf89df03dc7c954f830946f66d8"],["node_modules/inflight/inflight.js","42bbc3622abfefca5862fd0d12441a15"],["node_modules/inflight/package.json","717e6a74cca3aa236f9838cbb558bece"],["node_modules/inherits/README.md","de7eab94959b05c9765cad499ab092db"],["node_modules/inherits/inherits.js","09b210610125b162700734fb93dc892c"],["node_modules/inherits/inherits_browser.js","7c26fc24b695f2afbc284bbd5f64d6a4"],["node_modules/inherits/package.json","4a525fd61dce81c9564c2f08f67307c7"],["node_modules/ini/README.md","e335094d46b5e72d0faf8848c6e43475"],["node_modules/ini/ini.js","e117007a1f581e2bb40e6f37eb38db63"],["node_modules/ini/package.json","0819c5ccacf0fda82387b174129200df"],["node_modules/is-arrayish/README.md","29707858a2c6eb8e14e3ca822ce48fb6"],["node_modules/is-arrayish/index.js","37d2f8bf6f5eaa32af9695936e137f8c"],["node_modules/is-arrayish/package.json","a1c0c0a9813f51f08637bb7bafb0774d"],["node_modules/is-builtin-module/index.js","f63b2dd34de1163806fe7a045fdb393a"],["node_modules/is-builtin-module/package.json","755354b626e6cba103a258454cddd060"],["node_modules/is-builtin-module/readme.md","bfba03a99873da652de79e6705436800"],["node_modules/is-finite/index.js","14531067f0794e449029d9268fbc0d5b"],["node_modules/is-finite/package.json","86db285d329c59ac08b38c8c6aa25149"],["node_modules/is-finite/readme.md","99ae663cd22713c1977eda2a7f68278e"],["node_modules/is-fullwidth-code-point/index.js","38c7b39620fd5322e9cd5bdca5a9b5ad"],["node_modules/is-fullwidth-code-point/package.json","433b7faee2f21a7106b746af7b96c751"],["node_modules/is-fullwidth-code-point/readme.md","a499de3bda1124af893f9b64c5a62b53"],["node_modules/is-installed-globally/index.js","5055206c9513e9865d8f3720b53aeda6"],["node_modules/is-installed-globally/package.json","7546c7d8efb8b3fbb4bceeaae5ae348d"],["node_modules/is-installed-globally/readme.md","59fe571f26e30afdf34fa9c0f0a2b3cc"],["node_modules/is-npm/index.js","bc4b18b0c8c32b94883d6fc1d675e919"],["node_modules/is-npm/package.json","03f7f346260ae9bee5939b8543c34756"],["node_modules/is-npm/readme.md","a743e0abf08c28a37ecc4bef4dc02f8c"],["node_modules/is-obj/index.js","66d4241b89050b1324ef6b5c3d7d6cb5"],["node_modules/is-obj/package.json","e1338652796494af1e4255bcee272ada"],["node_modules/is-obj/readme.md","ea3a1560019edaa8d12595056e7f0d5e"],["node_modules/is-path-inside/index.js","32cfc9fb62f5e2712c94596997227faa"],["node_modules/is-path-inside/package.json","ee52212d15b90bc5a89467a623ae4823"],["node_modules/is-path-inside/readme.md","328755f3b79b37e247decdd20fb7c285"],["node_modules/is-redirect/index.js","44edfdcf7fbdbd68cdcd95a860d1719e"],["node_modules/is-redirect/package.json","89ee56f53390d3057647c18df94798bb"],["node_modules/is-redirect/readme.md","0686837395384c2637527ec4283a036c"],["node_modules/is-retry-allowed/index.js","8c4e2bc2de6a940f281b5e1cdd9f80b1"],["node_modules/is-retry-allowed/package.json","39a6865e4d282fc5fd30992ab5e8615c"],["node_modules/is-retry-allowed/readme.md","93ca70faa7862d6bade4d9541f54ee0c"],["node_modules/is-stream/index.js","2778ccebb8b27fdf4e858b11e9f96e2f"],["node_modules/is-stream/package.json","3e21cba61ed94f82dfcce58047b2ca46"],["node_modules/is-stream/readme.md","d2197994b1bc1bc55576a83239c83ba1"],["node_modules/is-utf8/README.md","d23a180a7623cd8e4c28a4bd204ca9a6"],["node_modules/is-utf8/is-utf8.js","d6bf49d9e457e9f115559194aca1e975"],["node_modules/is-utf8/package.json","506fde92d45ec75724ec561876c9c7e2"],["node_modules/isarray/README.md","d2f2d4e0c886ba00c26b830c666554f7"],["node_modules/isarray/build/build.js","d3005169d2c46521802b587ddc12bfb0"],["node_modules/isarray/component.json","32fed65eac22c95ae43ddfd1729b9bf3"],["node_modules/isarray/index.js","e8460ef833145a9652fba1bb4c47ede7"],["node_modules/isarray/package.json","995b579b64a2af317e1eb99015e7a639"],["node_modules/isexe/README.md","e20cc7a8815fa01cdc32e08409ed778c"],["node_modules/isexe/index.js","1a5f173769c2c3b82a211ab81ebb13b9"],["node_modules/isexe/mode.js","e4ae002fd14a8bf3666fe9b2c811e8bb"],["node_modules/isexe/package.json","5dcc65649f81c53da85070090b226ca2"],["node_modules/isexe/test/basic.js","d6149183bc6a5ee3220291b53e5f4567"],["node_modules/isexe/windows.js","2a44bcc05f54dddeb33a1776ee7e481a"],["node_modules/latest-version/index.js","47189a6116f678efb95dc3ba1a5e77fb"],["node_modules/latest-version/package.json","aff107478fefa46e342ea078a447b26f"],["node_modules/latest-version/readme.md","fd2c187b04a28596a64e24c924039354"],["node_modules/load-json-file/index.js","b5b58c5d7d67c11d10cad6af497bcbc1"],["node_modules/load-json-file/package.json","07737990f7bd4295f2f8ba9267d0ebe2"],["node_modules/load-json-file/readme.md","89694e455d0e132738a6a69d68424910"],["node_modules/lodash._reinterpolate/LICENSE.txt","ad20573d95563085adde70ee845966ea"],["node_modules/lodash._reinterpolate/README.md","f0b313c16f8ec10dc782d827be010ff3"],["node_modules/lodash._reinterpolate/index.js","d109289b492310fb94da2cae11126800"],["node_modules/lodash._reinterpolate/package.json","a8ab8f5512208b45a84c1939b2e66ddd"],["node_modules/lodash.defaults/README.md","56372a9407630abf28197a8335985853"],["node_modules/lodash.defaults/index.js","bc5e8d4b69b077619971c2d8a3bdf315"],["node_modules/lodash.defaults/package.json","1c4029d1094e578cf6bb9f86051188a1"],["node_modules/lodash.template/README.md","e7c1a0587338ba0f8e8707ec3846bb70"],["node_modules/lodash.template/index.js","b1bda935446a88b2e10bf404e5167409"],["node_modules/lodash.template/package.json","2b3c004f20c3b7bf1b8711cffc928907"],["node_modules/lodash.templatesettings/README.md","499943b66e8c7c707ddc79f8c0974be1"],["node_modules/lodash.templatesettings/index.js","6fc032aa4de90faaf8ae19020eb0bed5"],["node_modules/lodash.templatesettings/package.json","df8c6341573c31ad5ac93cd7c0349ee0"],["node_modules/loud-rejection/api.js","fb03c580c6296df18b39350e22f0bd97"],["node_modules/loud-rejection/index.js","3288863ed82f117ea85d432a09974ce0"],["node_modules/loud-rejection/package.json","183701e218555d8799879f5caaec3b48"],["node_modules/loud-rejection/readme.md","80d2f05fe951b3c139e1ed00cb7578a3"],["node_modules/loud-rejection/register.js","7308489c82a9faa09f4534df9098004c"],["node_modules/lowercase-keys/index.js","799e7f74999f8f795fd2191dbb08a1b7"],["node_modules/lowercase-keys/package.json","f02b5aaa29df1a4d459bc067363aec99"],["node_modules/lowercase-keys/readme.md","c110b9920324cf6e2546b289df35ad03"],["node_modules/lru-cache/README.md","a3c9d58dac5dc7323a4ccbcde43f78ad"],["node_modules/lru-cache/index.js","af7a53bda4659982cb7052ee06248506"],["node_modules/lru-cache/package.json","676c8b8de3c8f3f056eeaa3051530bae"],["node_modules/make-dir/index.js","6c519787fc83296440386a4a597481ce"],["node_modules/make-dir/node_modules/pify/index.js","d57492330e7bd53172c7d1cb2a1a15de"],["node_modules/make-dir/node_modules/pify/package.json","c41ab1df5709553acca654f3835b7e08"],["node_modules/make-dir/node_modules/pify/readme.md","4bcac71875782eb2b52f73f4e79924a7"],["node_modules/make-dir/package.json","13cad9a1a51f381fc4e36fc431b28101"],["node_modules/make-dir/readme.md","8a002b2d7cee9e0a702f2fd99401c189"],["node_modules/map-obj/index.js","2dbf2e519cb8026186d624ca503ca6e3"],["node_modules/map-obj/package.json","a39a8dc2cee6ab88f28c70192a5aa9c1"],["node_modules/map-obj/readme.md","cb8ea918916d2c1c65a605a36775cac8"],["node_modules/meow/index.js","7d6747a9bc20191e44606431fe4658e2"],["node_modules/meow/package.json","f7ddb2276243154bfce4503fc544fe0d"],["node_modules/meow/readme.md","4f1ff998325cd8bd7d371ebc7ed25c0f"],["node_modules/minimatch/README.md","69c8fd8e7fc4051b61c6343c0357be2b"],["node_modules/minimatch/minimatch.js","9e22ccffac9538b210d6bc9e120e8f15"],["node_modules/minimatch/package.json","87992e66cb3121004c8f25d4e3abcbff"],["node_modules/minimist/example/parse.js","559dd0b28e67e4da65c434476bc2c885"],["node_modules/minimist/index.js","c36f5714c734dba3d1cb40e836c1374b"],["node_modules/minimist/package.json","3b00a2e1e0f6b9209467fa47aa6ad1d4"],["node_modules/minimist/readme.markdown","c7b62ca1fbb8d8185e59da3d6e5ab397"],["node_modules/minimist/test/all_bool.js","0996869b339f45a72669d8638df020d3"],["node_modules/minimist/test/bool.js","e42588336909394bd2c0a02d8346a694"],["node_modules/minimist/test/dash.js","3912e17dca100d50c1bab4c7982d56dc"],["node_modules/minimist/test/default_bool.js","d97a3688462e13a7399204b153426be8"],["node_modules/minimist/test/dotted.js","16f59760e45e2cf7f835320635d59ce1"],["node_modules/minimist/test/kv_short.js","74c72f03ca3283bacd95ce6019fcd1e8"],["node_modules/minimist/test/long.js","652e865e69ae41e78d9ad95f8557f0a2"],["node_modules/minimist/test/num.js","3c6b959c2a952ca471797e28723fa8c5"],["node_modules/minimist/test/parse.js","466b0207dd29b19eefe9aff973472fb5"],["node_modules/minimist/test/parse_modified.js","d04f05190e5720bb1fb47be8f09f96d8"],["node_modules/minimist/test/short.js","a964fe2c657d6e71d1c3a2c8bc5ce79c"],["node_modules/minimist/test/stop_early.js","20dfd44d3acf4d24e21fa04c24841580"],["node_modules/minimist/test/unknown.js","68487dbf5d4323c19185167877da8736"],["node_modules/minimist/test/whitespace.js","caa1c589b42a96804176247191ccb980"],["node_modules/mkdirp/bin/cmd.js","9ef5fb33a1a94773afb7dc52b0dfbb5d"],["node_modules/mkdirp/bin/usage.txt","29298f0efcb0c0454a851886b91e00e2"],["node_modules/mkdirp/examples/pow.js","7440de96a1a111e53e3da08f0d8bb8eb"],["node_modules/mkdirp/index.js","7941341b14e76ae88be8dbad2202798e"],["node_modules/mkdirp/node_modules/minimist/example/parse.js","559dd0b28e67e4da65c434476bc2c885"],["node_modules/mkdirp/node_modules/minimist/index.js","822fc8889c4bc1e1906b9e51560e7978"],["node_modules/mkdirp/node_modules/minimist/package.json","ea0b57e7eca0dafc0edbf43d230ba406"],["node_modules/mkdirp/node_modules/minimist/readme.markdown","651854ca82c2fd452b10b7874d9b4ebc"],["node_modules/mkdirp/node_modules/minimist/test/dash.js","190934d8330fccc8c5aa07a3e43f028d"],["node_modules/mkdirp/node_modules/minimist/test/default_bool.js","c3598075b51486aa545526d13b454c66"],["node_modules/mkdirp/node_modules/minimist/test/dotted.js","e03ea33b7cfbb7799a90b5b7a799d253"],["node_modules/mkdirp/node_modules/minimist/test/long.js","652e865e69ae41e78d9ad95f8557f0a2"],["node_modules/mkdirp/node_modules/minimist/test/parse.js","02125d8ef8b795946d6e238b880d0814"],["node_modules/mkdirp/node_modules/minimist/test/parse_modified.js","076418970e9e56b926ded3e24aee7a01"],["node_modules/mkdirp/node_modules/minimist/test/short.js","a964fe2c657d6e71d1c3a2c8bc5ce79c"],["node_modules/mkdirp/node_modules/minimist/test/whitespace.js","caa1c589b42a96804176247191ccb980"],["node_modules/mkdirp/package.json","55e1f09f746f311a9b1b2855891418e8"],["node_modules/mkdirp/readme.markdown","fb5087d2309c829567a18b77d43fbea5"],["node_modules/mkdirp/test/chmod.js","0dc717d70d0a5c203d4445b254828170"],["node_modules/mkdirp/test/clobber.js","b58e37e5922e9d03cd4b4e383ec8acd2"],["node_modules/mkdirp/test/mkdirp.js","568448d36da55ea890923d483f082fbc"],["node_modules/mkdirp/test/opts_fs.js","012858e2d9fd5ad9bad79d0b780f3a46"],["node_modules/mkdirp/test/opts_fs_sync.js","0811db9973a3fe26d9fe2b6f550ae374"],["node_modules/mkdirp/test/perm.js","40f49b41cbcae7105729d7f892e229a8"],["node_modules/mkdirp/test/perm_sync.js","63faf9288fc73b378510149a3a2120a4"],["node_modules/mkdirp/test/race.js","ea03e8320bfdf179a4d589e73f3ac302"],["node_modules/mkdirp/test/rel.js","ee4926533441d5574469ed8afc9b2d21"],["node_modules/mkdirp/test/return.js","ac2c9466636f391c17c6994ea8a51338"],["node_modules/mkdirp/test/return_sync.js","9ab72a21fa3e974dd6e50ab25c0f697e"],["node_modules/mkdirp/test/root.js","1d8aad344388793f4ba1a2b68fc1e130"],["node_modules/mkdirp/test/sync.js","0ce9d0bf0203775fd4073b4d436920b5"],["node_modules/mkdirp/test/umask.js","ce0030869a33d36268e36e27e6f04e2e"],["node_modules/mkdirp/test/umask_sync.js","aaf976f897e44397d06242d36f3821e3"],["node_modules/normalize-package-data/README.md","a25bd698e2d5d0032a9daf1ae65329d8"],["node_modules/normalize-package-data/lib/extract_description.js","5c523c4ab369586f32d49c6caed99c2e"],["node_modules/normalize-package-data/lib/fixer.js","a2aa461cd97447384a17dd898504531c"],["node_modules/normalize-package-data/lib/make_warning.js","3b87184568b3ba806d38233c904ac250"],["node_modules/normalize-package-data/lib/normalize.js","d7c8d95c23842d8eda85fa2ff5ff5e7d"],["node_modules/normalize-package-data/lib/safe_format.js","7d5529faadfd4a28c0d3064d404e902e"],["node_modules/normalize-package-data/lib/typos.json","8598638c133c563f5322eba9c17be4fc"],["node_modules/normalize-package-data/lib/warning_messages.json","20e768e3962566757a16c67d7ad22991"],["node_modules/normalize-package-data/package.json","6d8765c34eb3ea4b28d3c272b940ea1e"],["node_modules/npm-run-path/index.js","ccd7be3a8d5534f49e480d7ebd108e17"],["node_modules/npm-run-path/package.json","d19f2e1ff856cb35da515b594c04d8d4"],["node_modules/npm-run-path/readme.md","79fecc6db1d972d20aaadb9ae327b3a8"],["node_modules/number-is-nan/index.js","8d047de69c33e1bebc91b6b113124f4b"],["node_modules/number-is-nan/package.json","1b1ede6d6e12f237d1651d059c36329b"],["node_modules/number-is-nan/readme.md","b5ae3f0dbb89c50a084aa9812777f712"],["node_modules/object-assign/index.js","4eb3c1a156ce2effd67b37a2dfedc632"],["node_modules/object-assign/package.json","c0a65eb73bcfe49e5f508ed24fe431f3"],["node_modules/object-assign/readme.md","dfa47f4fb28896ff0b929f4e7dac3705"],["node_modules/once/README.md","58f1e04252b1477aacd25268d88d5d50"],["node_modules/once/once.js","d1d6962324348ad89bf780a233952c61"],["node_modules/once/package.json","180273b8d47990e2eb0cf8049952fe37"],["node_modules/p-finally/index.js","801ef3e7cc0a0f5ba05bebbfef80787a"],["node_modules/p-finally/package.json","6033e4e724d30ac762dfc74597c05db2"],["node_modules/p-finally/readme.md","edd42042f0c6edba8f53d4fe6c506657"],["node_modules/package-json/index.js","0ff8ef5c39e8ec824eb4e806c32fb2d8"],["node_modules/package-json/package.json","f5d1c04da3c095b2a5e75ce97b4d06f8"],["node_modules/package-json/readme.md","bcf64c1155eaba5c127f1d30f0632273"],["node_modules/parse-json/index.js","dd63e2a84ff455d36be56cbeafd79c70"],["node_modules/parse-json/package.json","a809e07240a02564ff3625fdb4fd7e08"],["node_modules/parse-json/readme.md","a31d173dd9a021737afdc955aeab49d7"],["node_modules/parse-json/vendor/parse.js","567dcd8a04b7e0506a7a945285a711df"],["node_modules/parse-json/vendor/unicode.js","fe199b3c69703e7b7468b8cd01b68052"],["node_modules/path-exists/index.js","22728ba7b6566e930e7c96d80c8a7d9a"],["node_modules/path-exists/package.json","bb9cfd8a94bf75521455c6640d64298a"],["node_modules/path-exists/readme.md","d62c92c69e0de8cacf22661c70e88354"],["node_modules/path-is-absolute/index.js","135a9dc74dc76b698c2abeaaa165f889"],["node_modules/path-is-absolute/package.json","4b206555c1c5c4461b4ec9b04e27ca95"],["node_modules/path-is-absolute/readme.md","77dcaf91010aea98f54e727c5c34a297"],["node_modules/path-is-inside/LICENSE.txt","8de5f23be471b6814f19b2ad82a5208a"],["node_modules/path-is-inside/lib/path-is-inside.js","8c0895bb34d0317b22ed7749bb83cd28"],["node_modules/path-is-inside/package.json","182bc7e7ebe4b12eed3847821edb5e75"],["node_modules/path-key/index.js","5dba0819faf7e33637edf7bf750d48e4"],["node_modules/path-key/package.json","e088389f24a944265c3a36879813adca"],["node_modules/path-key/readme.md","faaa9d07d0f92acadeb7537d26c08215"],["node_modules/path-to-regexp/History.md","3a5e4a10d63d6ab976612d3697ea295f"],["node_modules/path-to-regexp/Readme.md","611b080406aa74cb00020b81a6c780fa"],["node_modules/path-to-regexp/index.d.ts","d8f620aa061671976f54d03d930314bf"],["node_modules/path-to-regexp/index.js","07e02f8b037e4653c60d978136a54670"],["node_modules/path-to-regexp/package.json","a51fc11ec44159b2480cd229202f3c57"],["node_modules/path-type/index.js","476274d39c1908aa028e5e12797cd010"],["node_modules/path-type/package.json","2d324ec03a6491e2027ec835c397c879"],["node_modules/path-type/readme.md","96c45a09c84a290eafca38434057ef2c"],["node_modules/pify/index.js","d3aa656ec8bdc1a98d648d1ceebb9267"],["node_modules/pify/package.json","2e2b9e908c6900774ea0146d88182afb"],["node_modules/pify/readme.md","f9471563ef6dd27f1d4df6b6aa28a21b"],["node_modules/pinkie-promise/index.js","6ad58f1f9e09b5d24f1c002f0c591030"],["node_modules/pinkie-promise/package.json","877510a1c1bfad4aba6dbec205343086"],["node_modules/pinkie-promise/readme.md","f42f5e165147cb487eee1d73bd9fca4e"],["node_modules/pinkie/index.js","ea130eba60f416a698c21d01b2ee5067"],["node_modules/pinkie/package.json","c311b1eb5a3347cfe7575a8256050168"],["node_modules/pinkie/readme.md","46b3ebc6617f8f45e28cb3bb4b2b1646"],["node_modules/prepend-http/index.js","3ad257429eccedbd2670db2548a3e073"],["node_modules/prepend-http/package.json","190a4d7957e1b78ab069308b697e90d2"],["node_modules/prepend-http/readme.md","4889b29b03519c7f28ea542cf6c16652"],["node_modules/pretty-bytes/index.js","8c32204d3f73d82d5ec972ddae260a59"],["node_modules/pretty-bytes/package.json","fc100b33a365c1b30f606c3c03ff40a6"],["node_modules/pretty-bytes/readme.md","1cf0330216fe484a3dbe07f2f72fab88"],["node_modules/pseudomap/README.md","c9f3908ac26b9a5f0f92fa5f06675e46"],["node_modules/pseudomap/map.js","7f678bc2d9d0ece6d4702713a4dbdc15"],["node_modules/pseudomap/package.json","454f1587dbcd24569c1480b723e3c5e4"],["node_modules/pseudomap/pseudomap.js","ffb83ef6b42486f5b1399991260b500a"],["node_modules/pseudomap/test/basic.js","54cdf7b00f4e8ba0831d0122e5249279"],["node_modules/rc/LICENSE.APACHE2","ffcf739dca268cb0f20336d6c1a038f1"],["node_modules/rc/LICENSE.BSD","e7a2a325a0069e82aff675bbf74464a0"],["node_modules/rc/LICENSE.MIT","e0f70a42adf526e6f5e605a94d98a420"],["node_modules/rc/README.md","09432e745a954fd2858b9f0507fdde8b"],["node_modules/rc/browser.js","8cb80d9dc185db3e7faca27feafb3d52"],["node_modules/rc/cli.js","9740b165e41579140bcf6401deb9db43"],["node_modules/rc/index.js","665b0bd0e6dffd6575b3549ac2440ebc"],["node_modules/rc/lib/utils.js","b825abe4a237e7d9145f56904069b49a"],["node_modules/rc/package.json","27cb8d2c238c2e60bca0692b59059aa7"],["node_modules/rc/test/ini.js","5d5914db7bc21136f83c05703927cd4c"],["node_modules/rc/test/nested-env-vars.js","27d5644f0925b3f2b7c082b4d07fd175"],["node_modules/rc/test/test.js","8ab5665379909d30b99dc0c59b09d470"],["node_modules/read-pkg-up/index.js","22fe3248b00dc24bd50d9e9bd2aa881f"],["node_modules/read-pkg-up/package.json","c38b0bcb98f88843305da5b5b9a299d2"],["node_modules/read-pkg-up/readme.md","73be48cd22894fd48790cdbf61496a1e"],["node_modules/read-pkg/index.js","6c4d8c6fdb256d7d4cdd4c8fa4586853"],["node_modules/read-pkg/package.json","25595a863cdeeb1f968be28e64d45a26"],["node_modules/read-pkg/readme.md","95dc25f6abd054344df752eae84aace5"],["node_modules/redent/index.js","652b88d0e4684ccc2c9412e222112f32"],["node_modules/redent/package.json","a442094bb3105dad005fdf5bdd3cac06"],["node_modules/redent/readme.md","3f05080d4138c3c2fdb7e17247afb01c"],["node_modules/registry-auth-token/CHANGELOG.md","011828a145c6f6940f9625d9c97b046c"],["node_modules/registry-auth-token/README.md","c1dcc324e6b73dd79c24c58f94516e58"],["node_modules/registry-auth-token/base64.js","7a307c15cf41e2e2ec24354944455003"],["node_modules/registry-auth-token/index.js","d0548fd7db78c31338e5fb55b52d13d3"],["node_modules/registry-auth-token/package.json","c7b2a31798c5a334296ffc01ac02f00e"],["node_modules/registry-auth-token/registry-url.js","83aa45991788df37bef9055b312f30d9"],["node_modules/registry-auth-token/test/auth-token.test.js","b76e8bf4789b0a48071435eb17e29dd2"],["node_modules/registry-auth-token/test/registry-url.test.js","e214c549b7580dcecfbfe90593b66f2f"],["node_modules/registry-auth-token/yarn.lock","cbc0e0525a67eaa3bfa6f3af649b5d6f"],["node_modules/registry-url/index.js","3da1484610078289517ee8c2e0a5ed3e"],["node_modules/registry-url/package.json","855829f12f2ac44558d5344033f4e7a2"],["node_modules/registry-url/readme.md","94b561124c22fc519b1ce3ea2c6dd2d7"],["node_modules/repeating/index.js","e8c65ca553cf8d0a82c3da44a6cd377c"],["node_modules/repeating/package.json","7c8d579c843c0f3ea56100a9f674c33c"],["node_modules/repeating/readme.md","93b7505400853eb3a9766942be74f559"],["node_modules/safe-buffer/README.md","570381ffb15269fa623a0b75e67eb63a"],["node_modules/safe-buffer/index.js","b1622ff2944ba3f13a1cf6fbcf0f9e3f"],["node_modules/safe-buffer/package.json","8e52196542dd469413e5d0b9ab748a26"],["node_modules/safe-buffer/test.js","9c7e39d1b7237350934d079d8fe2edbe"],["node_modules/semver-diff/index.js","971357024c060af35d6b11dbbad73751"],["node_modules/semver-diff/package.json","1105591f1cf8e9d6fa9be867f3115eb4"],["node_modules/semver-diff/readme.md","b27655d8708635c548f8999c17b3f8aa"],["node_modules/semver/README.md","69accb09fdd863ba633d76978585db54"],["node_modules/semver/package.json","1b308603c2119a2798ba205e988cee8b"],["node_modules/semver/range.bnf","76d83b46734a4604da9df9998fe7d19e"],["node_modules/semver/semver.js","6f1c6e29e177108e10faf759ad3dc621"],["node_modules/serviceworker-cache-polyfill/README.md","1bbf2a7bf3775222176bdd534865152d"],["node_modules/serviceworker-cache-polyfill/index.js","3e07c94b20c469bfb10856ebe3abf9e4"],["node_modules/serviceworker-cache-polyfill/package.json","1159385094e765ff5e2d8406625bbbf5"],["node_modules/shebang-command/index.js","c1fab77715684245c8cd4467962fd534"],["node_modules/shebang-command/package.json","25c0db2d07f3b42fd7a7e1e47f61594d"],["node_modules/shebang-command/readme.md","a2a2f79917d0d6c0bd56e2fd4c8a2a42"],["node_modules/shebang-regex/index.js","5402af3cbceedec29ba210106190a168"],["node_modules/shebang-regex/package.json","a983b1da89dc4ba1ca860ffa0dbe6457"],["node_modules/shebang-regex/readme.md","58c2f60fa0022c29174a64010493e388"],["node_modules/signal-exit/CHANGELOG.md","92c08b8901d62b4d61042f05f25bce11"],["node_modules/signal-exit/LICENSE.txt","e29e20260a1c78dba16a233048565cde"],["node_modules/signal-exit/README.md","7ce1c2bb98642b68f14b4cd04ee712c4"],["node_modules/signal-exit/index.js","a2b431d1c9a84363966d8c76143b87ba"],["node_modules/signal-exit/package.json","b59407a458cfe8dc844cd04d1b3b9b60"],["node_modules/signal-exit/signals.js","088797b13dce89e566484933fe8538b7"],["node_modules/spdx-correct/README.md","efd757bb0993fc9c9dc91ea802823ce1"],["node_modules/spdx-correct/index.js","655a50d011bc7f6b8139e8560bf47e0b"],["node_modules/spdx-correct/package.json","90d44d7dea10aec77d63cda219a346b1"],["node_modules/spdx-expression-parse/README.md","2c996b4d6cb281e19134d89a58fb5e11"],["node_modules/spdx-expression-parse/index.js","0ed57f742c6d7264cf06eee4f7c71e3c"],["node_modules/spdx-expression-parse/package.json","34db843576e922b3d6a933f5cdc59a13"],["node_modules/spdx-expression-parse/parser.js","ec18bac614dd3a947a7dd05027b108fe"],["node_modules/spdx-license-ids/README.md","7bc6c8967a46878864030be2ed07f32c"],["node_modules/spdx-license-ids/package.json","bb784dd5749a73540b218bcb0f8986b4"],["node_modules/spdx-license-ids/spdx-license-ids.json","34af712b0ca5a258cf12f8d705366856"],["node_modules/string-width/index.js","0182dbe81ed2fdb851713e08044abd5e"],["node_modules/string-width/package.json","9d992da0cabc8afc9a5ed788f911e6b5"],["node_modules/string-width/readme.md","51f666fc07118cf4274efc04070c1332"],["node_modules/strip-ansi/index.js","eab67348b8c3b0c5de0777ececd0809e"],["node_modules/strip-ansi/package.json","28736feec645b0a8fbee42bf90cc3ec1"],["node_modules/strip-ansi/readme.md","a71e55e47923aa4aaa475e6a806bb76d"],["node_modules/strip-bom/index.js","1310cd8a86ac52095ca8d47104385e94"],["node_modules/strip-bom/package.json","dc8fc25fa613f494af7f8bb45e67794c"],["node_modules/strip-bom/readme.md","5028bec06ab579956688a189d0771904"],["node_modules/strip-eof/index.js","a2352e7dd038d8a423b531ebad6cc856"],["node_modules/strip-eof/package.json","89739909ae0cc75fcb74510f519a6f42"],["node_modules/strip-eof/readme.md","e237a2387078f6fe2f3fd20bb722c006"],["node_modules/strip-indent/cli.js","d31478d4f45669ff6d825580ba43d641"],["node_modules/strip-indent/index.js","8999280439e398ef1c50e4a108d115c2"],["node_modules/strip-indent/package.json","ef812f8b42ceb457a6f2ce756376e1f2"],["node_modules/strip-indent/readme.md","ea4eb6df64580359682740ece6ed95c4"],["node_modules/strip-json-comments/index.js","8cdf3b8b015e770581934f4bbdc0d971"],["node_modules/strip-json-comments/package.json","8feb1903ab95dd667f43f119f7feac8a"],["node_modules/strip-json-comments/readme.md","c836df46a1d296af49076dc2705fe6d8"],["node_modules/supports-color/browser.js","23fd7fc568bb694e3c27b121e37a3df0"],["node_modules/supports-color/index.js","f41b297da6583905558fb9d60353ef16"],["node_modules/supports-color/package.json","b69f10102687da2f958bd8d847d03127"],["node_modules/supports-color/readme.md","461596ad4c2a2674e18ad9c6034d0228"],["node_modules/sw-precache/README.md","7ead1626938543e77b461eb78ca613c1"],["node_modules/sw-precache/cli.js","9f7035f7fe1ec5145aaa2d2ee7b9b631"],["node_modules/sw-precache/lib/functions.js","8cee22ad5cf24da3d3b8a35d967ec522"],["node_modules/sw-precache/lib/sw-precache.js","a06f9637b9fb6571ba149449d4efd0dd"],["node_modules/sw-precache/package.json","f5562d51624ceed36c7e048778cd2a4b"],["node_modules/sw-precache/service-worker.tmpl","febcef89dc2eaa41591d2f948f0f9deb"],["node_modules/sw-toolbox/README.md","6fab438c0856b91b5ffc1937dbef876b"],["node_modules/sw-toolbox/companion.js","6c891a25790dfafb6041bca5dfefdc77"],["node_modules/sw-toolbox/index.d.ts","b5eb93f97427d7a73d068ad45b16de72"],["node_modules/sw-toolbox/lib/helpers.js","0cd89bf34cad65cf397c4df3ff30b952"],["node_modules/sw-toolbox/lib/idb-cache-expiration.js","04f87dddabf177b5777858d3bf93d519"],["node_modules/sw-toolbox/lib/listeners.js","96239c6ebbb63eb48afe209b47045995"],["node_modules/sw-toolbox/lib/options.js","1596f89daa97e175201ede34194e6e2d"],["node_modules/sw-toolbox/lib/route.js","28eb00fa3f0629f29a57cbadadb5b62e"],["node_modules/sw-toolbox/lib/router.js","bb5d878875b767dee0247e36dcabbd55"],["node_modules/sw-toolbox/lib/strategies/cacheFirst.js","98df7d0a73a09bbee8d1b94cb74a99d9"],["node_modules/sw-toolbox/lib/strategies/cacheOnly.js","ac0098e43f27253af0d19ffb0a1e8bf7"],["node_modules/sw-toolbox/lib/strategies/fastest.js","ee5f548d4b0a6740d0f58841147f289b"],["node_modules/sw-toolbox/lib/strategies/index.js","ae726b3e8a480ff20080d9525a87d4af"],["node_modules/sw-toolbox/lib/strategies/networkFirst.js","1eeb34efa5138e0ac610d6fbe32a10aa"],["node_modules/sw-toolbox/lib/strategies/networkOnly.js","d3981eb3d4f75bc428b567a39646d54d"],["node_modules/sw-toolbox/lib/sw-toolbox.js","d7ce34e1f90a0506bb11acd591b29b2d"],["node_modules/sw-toolbox/package.json","c8f3255a1e54d7711dde5645add9ed67"],["node_modules/sw-toolbox/sw-toolbox.js","2770efb889cc10c4de88d0b746c2a13c"],["node_modules/sw-toolbox/sw-toolbox.js.map","ddac38b51c28fdc819adb2495eb6a3ff"],["node_modules/term-size/index.js","88f656d5f215b8595179fea33be47d95"],["node_modules/term-size/package.json","efa0e3f255078fb67c8d641d22f25424"],["node_modules/term-size/readme.md","31ddf87c237b497504084657fd58df60"],["node_modules/term-size/vendor/windows/term-size.exe","8d95c375a874ca3948dd4ee9915c2033"],["node_modules/timed-out/index.js","863e59c799f982d986951402361204d8"],["node_modules/timed-out/package.json","9f4f87dfc7276bd16743a0d118c4ba49"],["node_modules/timed-out/readme.md","e4f47fb1728af5415cef387e52f9477b"],["node_modules/trim-newlines/index.js","668e166c032aae23e0bc43cd81340c6d"],["node_modules/trim-newlines/package.json","ae6743c272318643b5700d713c40da96"],["node_modules/trim-newlines/readme.md","02deadce9e4a8c281e94996caeefcbcf"],["node_modules/unique-string/index.js","2972e7f95c6111d9201f2ef8b31cadb6"],["node_modules/unique-string/package.json","ecef21b4c5b08be425f803e03253198d"],["node_modules/unique-string/readme.md","9a48d4833af6a6dd66e0184e02e18187"],["node_modules/unzip-response/index.js","2e2f7cca520c32f83d2923fa4bf80fe1"],["node_modules/unzip-response/package.json","ff0c7228c6a081128075e733497177e9"],["node_modules/unzip-response/readme.md","2cc0bf9ee3712ba6da1940635ed4d86c"],["node_modules/update-notifier/check.js","b763c113f2d60e5ff338646da626af6f"],["node_modules/update-notifier/index.js","cace4815f03a54f4214bd3ac9ed55845"],["node_modules/update-notifier/package.json","50cf399f39733eb9d4cdd4157b86670f"],["node_modules/update-notifier/readme.md","35c01267f2f21a7fdb3085a1df2fb72e"],["node_modules/urijs/CHANGELOG.md","651405d10b306e0ef33162d6c3db5332"],["node_modules/urijs/LICENSE.txt","208faacdc29d1dbd0fdbe20fbfcf7949"],["node_modules/urijs/README.md","82c96cbde7b695922d409129e2555f51"],["node_modules/urijs/package.json","ae1066273eeaa07c1f42e8fd9ec080de"],["node_modules/urijs/src/IPv6.js","cd3a38d260d1782a73d02911927b48d7"],["node_modules/urijs/src/SecondLevelDomains.js","459416eafedc7a3a9e982902a85a4408"],["node_modules/urijs/src/URI.fragmentQuery.js","5574cf1aca8f514e298110728e8352c8"],["node_modules/urijs/src/URI.fragmentURI.js","faf82073d0133c69cba0f4d6ea8f4f33"],["node_modules/urijs/src/URI.js","86dcaca907a191f351b565e563624b1f"],["node_modules/urijs/src/URI.min.js","02a81d54ca8d8103894b9e4e3999329d"],["node_modules/urijs/src/URITemplate.js","9316eb50467d053afe4e19765f9656fc"],["node_modules/urijs/src/jquery.URI.js","5666f43b4a515d5d412dd3a55379ac3c"],["node_modules/urijs/src/jquery.URI.min.js","087e71e91408e63597b8fe603ab63b53"],["node_modules/urijs/src/punycode.js","3d05e1a0418c33aca6852f201a13ae88"],["node_modules/url-parse-lax/index.js","2bb4fd9e112b0204bd6a4e9fa1122060"],["node_modules/url-parse-lax/package.json","3fe6a3b877828c02c050fe627d1c496b"],["node_modules/url-parse-lax/readme.md","2ada5c4bda887ac3356eb98dbd2e1832"],["node_modules/validate-npm-package-license/README.md","ba9681f6c3438dbc91ba1d8a47c2cbd6"],["node_modules/validate-npm-package-license/index.js","32796556252ac851bbfc133b01179b00"],["node_modules/validate-npm-package-license/package.json","e477a48e233f192785a410dd37be5d0c"],["node_modules/which/CHANGELOG.md","9967c86e32c3539e422324856663c553"],["node_modules/which/README.md","dc8e60780db89432ba71147658ab58be"],["node_modules/which/package.json","62e1717bf86d58f2948395a1069d09a1"],["node_modules/which/which.js","fb84cfc01f3cd448d81d933b24fc2db0"],["node_modules/widest-line/index.js","963c89e13411ce3ffee54f2255a12a8a"],["node_modules/widest-line/package.json","87da207c6f62fa8f33a3ac27909350a7"],["node_modules/widest-line/readme.md","250fabf5b8597c766710a7976a68e949"],["node_modules/wrappy/README.md","55b4b44807d7edaf6084e42a5ae078d6"],["node_modules/wrappy/package.json","5aab53d5506be1d5c3dfec3adc0db43f"],["node_modules/wrappy/wrappy.js","04a65e1669dc90fa11c900693c1974b1"],["node_modules/write-file-atomic/README.md","3d08e549ba5bbe61afbd65a9ac4b2dcc"],["node_modules/write-file-atomic/index.js","b5f8ad68e941067e87222011a5aaa413"],["node_modules/write-file-atomic/package.json","b87980f57749f236cf5a763da33e2043"],["node_modules/xdg-basedir/index.js","c3fc8069cd512568af9dd3ce7e2823fc"],["node_modules/xdg-basedir/package.json","f96cea810179dff89b196a1ae6400ab0"],["node_modules/xdg-basedir/readme.md","c11674f297e9481fe2b3f5a0ac4ca892"],["node_modules/yallist/README.md","2020b4158b3e940665ef19b9b995293a"],["node_modules/yallist/iterator.js","107908efdffadf7a1854c8f790bf9c21"],["node_modules/yallist/package.json","c74e8df9f85930e1ecce14fa1c61ae23"],["node_modules/yallist/yallist.js","12939b655237903f48ede1fee77adaa4"],["package-lock.json","9ecaac4df60e3a413191b772fe70091a"],["scripts/app.js","cb317cc825bb093d575ebebed0582033"],["service-worker_4.js","e25e80e552fa53c921095fb6520eee7f"],["styles/inline.css","964e8546d971e6d204fd2644c3ed4abf"]];
-var cacheName = 'sw-precache-v3-sw-precache-' + (self.registration ? self.registration.scope : '');
-
-
-var ignoreUrlParametersMatching = [/^utm_/];
-
-
-
-var addDirectoryIndex = function (originalUrl, index) {
-    var url = new URL(originalUrl);
-    if (url.pathname.slice(-1) === '/') {
-      url.pathname += index;
-    }
-    return url.toString();
-  };
-
-var cleanResponse = function (originalResponse) {
-    // If this is not a redirected response, then we don't have to do anything.
-    if (!originalResponse.redirected) {
-      return Promise.resolve(originalResponse);
-    }
-
-    // Firefox 50 and below doesn't support the Response.body stream, so we may
-    // need to read the entire body to memory as a Blob.
-    var bodyPromise = 'body' in originalResponse ?
-      Promise.resolve(originalResponse.body) :
-      originalResponse.blob();
-
-    return bodyPromise.then(function(body) {
-      // new Response() is happy when passed either a stream or a Blob.
-      return new Response(body, {
-        headers: originalResponse.headers,
-        status: originalResponse.status,
-        statusText: originalResponse.statusText
-      });
-    });
-  };
-
-var createCacheKey = function (originalUrl, paramName, paramValue,
-                           dontCacheBustUrlsMatching) {
-    // Create a new URL object to avoid modifying originalUrl.
-    var url = new URL(originalUrl);
-
-    // If dontCacheBustUrlsMatching is not set, or if we don't have a match,
-    // then add in the extra cache-busting URL parameter.
-    if (!dontCacheBustUrlsMatching ||
-        !(url.pathname.match(dontCacheBustUrlsMatching))) {
-      url.search += (url.search ? '&' : '') +
-        encodeURIComponent(paramName) + '=' + encodeURIComponent(paramValue);
-    }
-
-    return url.toString();
-  };
-
-var isPathWhitelisted = function (whitelist, absoluteUrlString) {
-    // If the whitelist is empty, then consider all URLs to be whitelisted.
-    if (whitelist.length === 0) {
-      return true;
-    }
-
-    // Otherwise compare each path regex to the path of the URL passed in.
-    var path = (new URL(absoluteUrlString)).pathname;
-    return whitelist.some(function(whitelistedPathRegex) {
-      return path.match(whitelistedPathRegex);
-    });
-  };
-
-var stripIgnoredUrlParameters = function (originalUrl,
-    ignoreUrlParametersMatching) {
-    var url = new URL(originalUrl);
-    // Remove the hash; see https://github.com/GoogleChrome/sw-precache/issues/290
-    url.hash = '';
-
-    url.search = url.search.slice(1) // Exclude initial '?'
-      .split('&') // Split into an array of 'key=value' strings
-      .map(function(kv) {
-        return kv.split('='); // Split each 'key=value' string into a [key, value] array
-      })
-      .filter(function(kv) {
-        return ignoreUrlParametersMatching.every(function(ignoredRegex) {
-          return !ignoredRegex.test(kv[0]); // Return true iff the key doesn't match any of the regexes.
-        });
-      })
-      .map(function(kv) {
-        return kv.join('='); // Join each [key, value] array into a 'key=value' string
-      })
-      .join('&'); // Join the array of 'key=value' strings into a string with '&' in between each
-
-    return url.toString();
-  };
-
-
-var hashParamName = '_sw-precache';
-var urlsToCacheKeys = new Map(
-  precacheConfig.map(function(item) {
-    var relativeUrl = item[0];
-    var hash = item[1];
-    var absoluteUrl = new URL(relativeUrl, self.location);
-    var cacheKey = createCacheKey(absoluteUrl, hashParamName, hash, false);
-    return [absoluteUrl.toString(), cacheKey];
-  })
-);
-
-function setOfCachedUrls(cache) {
-  return cache.keys().then(function(requests) {
-    return requests.map(function(request) {
-      return request.url;
-    });
-  }).then(function(urls) {
-    return new Set(urls);
-  });
-}
-
-self.addEventListener('install', function(event) {
-  event.waitUntil(
+self.addEventListener('install', function(e) {
+  console.log('[ServiceWorker] Install');
+  e.waitUntil(
     caches.open(cacheName).then(function(cache) {
-      return setOfCachedUrls(cache).then(function(cachedUrls) {
-        return Promise.all(
-          Array.from(urlsToCacheKeys.values()).map(function(cacheKey) {
-            // If we don't have a key matching url in the cache already, add it.
-            if (!cachedUrls.has(cacheKey)) {
-              var request = new Request(cacheKey, {credentials: 'same-origin'});
-              return fetch(request).then(function(response) {
-                // Bail out of installation unless we get back a 200 OK for
-                // every request.
-                if (!response.ok) {
-                  throw new Error('Request for ' + cacheKey + ' returned a ' +
-                    'response with status ' + response.status);
-                }
-
-                return cleanResponse(response).then(function(responseToCache) {
-                  return cache.put(cacheKey, responseToCache);
-                });
-              });
-            }
-          })
-        );
-      });
-    }).then(function() {
-      
-      // Force the SW to transition from installing -> active state
-      return self.skipWaiting();
-      
+      console.log('[ServiceWorker] Caching app shell');
+      return cache.addAll(filesToCache);
     })
   );
 });
 
-self.addEventListener('activate', function(event) {
-  var setOfExpectedUrls = new Set(urlsToCacheKeys.values());
-
-  event.waitUntil(
-    caches.open(cacheName).then(function(cache) {
-      return cache.keys().then(function(existingRequests) {
-        return Promise.all(
-          existingRequests.map(function(existingRequest) {
-            if (!setOfExpectedUrls.has(existingRequest.url)) {
-              return cache.delete(existingRequest);
-            }
-          })
-        );
-      });
-    }).then(function() {
-      
-      return self.clients.claim();
-      
+self.addEventListener('activate', function(e) {
+  console.log('[ServiceWorker] Activate');
+  e.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(keyList.map(function(key) {
+        if (key !== cacheName && key !== dataCacheName) {
+          console.log('[ServiceWorker] Removing old cache', key);
+          return caches.delete(key);
+        }
+      }));
     })
   );
+  return self.clients.claim();
 });
-
-
-self.addEventListener('fetch', function(event) {
-  if (event.request.method === 'GET') {
-    // Should we call event.respondWith() inside this fetch event handler?
-    // This needs to be determined synchronously, which will give other fetch
-    // handlers a chance to handle the request if need be.
-    var shouldRespond;
-
-    // First, remove all the ignored parameters and hash fragment, and see if we
-    // have that URL in our cache. If so, great! shouldRespond will be true.
-    var url = stripIgnoredUrlParameters(event.request.url, ignoreUrlParametersMatching);
-    shouldRespond = urlsToCacheKeys.has(url);
-
-    // If shouldRespond is false, check again, this time with 'index.html'
-    // (or whatever the directoryIndex option is set to) at the end.
-    var directoryIndex = 'index.html';
-    if (!shouldRespond && directoryIndex) {
-      url = addDirectoryIndex(url, directoryIndex);
-      shouldRespond = urlsToCacheKeys.has(url);
-    }
-
-    // If shouldRespond is still false, check to see if this is a navigation
-    // request, and if so, whether the URL matches navigateFallbackWhitelist.
-    var navigateFallback = '';
-    if (!shouldRespond &&
-        navigateFallback &&
-        (event.request.mode === 'navigate') &&
-        isPathWhitelisted([], event.request.url)) {
-      url = new URL(navigateFallback, self.location).toString();
-      shouldRespond = urlsToCacheKeys.has(url);
-    }
-
-    // If shouldRespond was set to true at any point, then call
-    // event.respondWith(), using the appropriate cache key.
-    if (shouldRespond) {
-      event.respondWith(
-        caches.open(cacheName).then(function(cache) {
-          return cache.match(urlsToCacheKeys.get(url)).then(function(response) {
-            if (response) {
-              return response;
-            }
-            throw Error('The cached response that was expected is missing.');
+self.addEventListener('fetch', function(e) {
+  console.log('[Service Worker] Fetch', e.request.url);
+    var dataUrl = 'https://api-ratp.pierre-grimaud.fr/v3/schedules/';
+    if (e.request.url.indexOf(dataUrl) > -1) {
+      /*
+       * When the request URL contains dataUrl, the app is asking for fresh
+       * weather data. In this case, the service worker always goes to the
+       * network and then caches the response. This is called the "Cache then
+       * network" strategy:
+       * https://jakearchibald.com/2014/offline-cookbook/#cache-then-network
+       */
+      e.respondWith(
+        caches.open(dataCacheName).then(function(cache) {
+          return fetch(e.request).then(function(response){
+            cache.put(e.request.url, response.clone());
+            return response;
           });
-        }).catch(function(e) {
-          // Fall back to just fetch()ing the request if some unexpected error
-          // prevented the cached response from being valid.
-          console.warn('Couldn\'t serve response for "%s" from cache: %O', event.request.url, e);
-          return fetch(event.request);
+        })
+      );
+    } else {
+      /*
+       * The app is asking for app shell files. In this scenario the app uses the
+       * "Cache, falling back to the network" offline strategy:
+       * https://jakearchibald.com/2014/offline-cookbook/#cache-falling-back-to-network
+       */
+      e.respondWith(
+        caches.match(e.request).then(function(response) {
+          return response || fetch(e.request);
         })
       );
     }
-  }
-});
-
-
-
-
-
-
-
+  });
