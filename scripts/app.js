@@ -106,6 +106,7 @@
         }
 
         if (app.isLoading) {
+            window.cardLoadTime = performance.now();
             app.spinner.setAttribute('hidden', true);
             app.container.removeAttribute('hidden');
             app.isLoading = false;
@@ -273,7 +274,6 @@
       console.log(app.selectedTimetables)
 */
     if (app.selectedTimetables) {
-      console.log('por aquí si');
       app.selectedTimetables = JSON.parse(app.selectedTimetables);
       app.selectedTimetables.forEach(function(table) {
         app.getSchedule(table.key, table.label);
@@ -284,10 +284,13 @@
          * scenario could guess the user's location via IP lookup and then inject
          * that data into the page.
          */
+
+        window.firstCallTime = performance.now();
         app.updateTimetableCard(initialStationTimetable);
         app.selectedTimetables = [
           {key: initialStationTimetable.key, label: initialStationTimetable.label}
         ];
+
         //app.saveSelectedTimetables();
       }
     if ('serviceWorker' in navigator) {
